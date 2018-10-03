@@ -2,6 +2,6 @@
 #### Service for requesting raw and resized images.
 
 ## To run RSZR locally:
-* do this
+* using the latest version of node... running v8.12.0
 * `then put in this codez`
 * `moar codez`
