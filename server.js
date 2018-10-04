@@ -1,4 +1,5 @@
-// used https://github.com/rsp/node-static-http-servers/blob/master/http.js as my starting point
+// credit: used https://github.com/rsp/node-static-http-servers/blob/master/http.js as my
+// starting point for serving static images with node
 
 const path = require('path');
 const http = require('http');
@@ -61,7 +62,7 @@ const server = http.createServer((req, res) => {
 
   const file = path.join(dir, reqPath);
 
-  // Confused about what case this covers. If we're formulating the file with path.join and putting dir first, wouldn't the index always be 0?
+  // ?Confused about what case this covers. If we're formulating the file with path.join and putting dir first, wouldn't the index always be 0?
   if (file.indexOf(dir + path.sep) !== 0) {
     sendErrorResponse(res, 403);
   }
@@ -73,7 +74,7 @@ const server = http.createServer((req, res) => {
     // we have the image, raw or resized
     console.log('We have this file! Serving it up!')
     res.setHeader('Content-Type', type);
-    rawStream.pipe(res); //end() is automatically called once we've read everything from the stream
+    rawStream.pipe(res);
   }, () => {
     // we don't have the image already, but we may have the raw version if they're asking for resized
     const { valid, resizedNameWithExt, rawName, ext, width, height } = getResizeParams(reqPath);
