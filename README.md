@@ -9,3 +9,7 @@
 ## To add for dev:
 * nodemon
 * linter
+
+## Bugs and To Do's:
+* Currently able to serve raw gifs, but resizing results in what appears to be just one frame from the gif (resized).
+* Add more helpful errors for helping users who submit malformed requests.
