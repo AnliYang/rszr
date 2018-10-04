@@ -26,7 +26,7 @@ http://localhost:3000/resized/cheese-cake_400x200.jpg
 * linter
 
 ## Bugs and To Do's:
-* Handle gifs. Currently able to serve raw gifs, but resizing results in what appears to be just one frame from the gif (resized).
+* Handle gifs. Currently able to serve raw gifs (e.g., http://localhost:3000/raw/zombie-dance.gif), but resizing results in what appears to be just one frame from the gif (resized) (e.g., http://localhost:3000/resized/zombie-dance_200x300.gif).
 * Add informative errors for helping users who submit malformed requests.
 * Pull all resizing out into a separate module, keeping in mind that I'm likely to use a different library to process gif resizing.
 * The image quality seems to be pretty compromised when resizing. Look into different settings with the current library, and other options.
