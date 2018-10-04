@@ -72,6 +72,11 @@ const getResizeParams = (reqPath) => {
   }
 };
 
+const handleStream = (stream, onOpen, onError) => {
+  stream.on('open', onOpen);
+  stream.on('error', onError);
+};
+
 const server = http.createServer((req, res) => {
   const reqPath = req.url.toString().split('?')[0];
 
@@ -88,17 +93,14 @@ const server = http.createServer((req, res) => {
 
   const type = MIME[path.extname(file).slice(1)] || MIME.txt;
 
-  const stream = fs.createReadStream(file);
-
-  // we have the image, raw or resized
-  stream.on('open', () => {
+  const rawStream = fs.createReadStream(file);
+  handleStream(rawStream, () => {
+    // we have the image, raw or resized
     console.log('We have this file! Serving it up!')
     res.setHeader('Content-Type', type);
-    stream.pipe(res); //end() is automatically called once we've read everything from the stream
-  });
-
-  // we don't have the image already, but we may have the raw version if they're asking for resized
-  stream.on('error', () => {
+    rawStream.pipe(res); //end() is automatically called once we've read everything from the stream
+  }, () => {
+    // we don't have the image already, but we may have the raw version if they're asking for resized
     const { valid, resizedNameWithExt, rawName, ext, width, height } = getResizeParams(reqPath);
 
     if (!valid) {
@@ -115,16 +117,12 @@ const server = http.createServer((req, res) => {
           return sendErrorResponse(res, 404);
         }
 
-        const stream = fs.createReadStream(resizedFilePath);
-
-        stream.on('open', () => {
+        const resizedStream = fs.createReadStream(resizedFilePath);
+        handleStream(resizedStream, () => {
           res.setHeader('Content-Type', type);
-          stream.pipe(res);
-        });
-
-        // if for some reason we can't find the file we just created
-        stream.on('error', () => {
-          sendErrorResponse(res, 500)
+          resizedStream.pipe(res);
+        }, () => {
+          sendErrorResponse(res, 500);
         });
       });
   });
