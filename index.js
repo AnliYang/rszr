@@ -5,39 +5,9 @@ const http = require('http');
 const fs = require('fs');
 const sharp = require('sharp');
 
+const CONSTANTS = require('./constants');
+
 const dir = path.join(__dirname, 'static');
-
-const MIME = {
-  html: 'text/html',
-  txt: 'text/plain',
-  css: 'text/css',
-  gif: 'image/gif',
-  jpg: 'image/jpeg',
-  png: 'image/png',
-  svg: 'image/svg+xml',
-  js: 'application/javascript',
-  ico: 'image/x-icon'
-};
-
-const IMAGE_TYPES = [
-  MIME.gif,
-  MIME.jpg,
-  MIME.png,
-  MIME.svg
-];
-
-const ERROR_RESPONSES = {
-  403: 'Forbidden',
-  404: 'Not found',
-  500: 'Internal server error',
-  501: 'Method not implemented'
-};
-
-const sendErrorResponse = (res, code) => {
-  res.setHeader('Content-Type', MIME.txt);
-  res.statusCode = code;
-  res.end(ERROR_RESPONSES[code]);
-};
 
 const getResizeParams = (reqPath) => {
   const { dir, base: resizedNameWithExt, name, ext } = path.parse(reqPath);
@@ -71,6 +41,12 @@ const getResizeParams = (reqPath) => {
   }
 };
 
+const sendErrorResponse = (res, code) => {
+  res.setHeader('Content-Type', CONSTANTS.MIME.txt);
+  res.statusCode = code;
+  res.end(CONSTANTS.ERROR_RESPONSES[code]);
+};
+
 const handleStream = (stream, onOpen, onError) => {
   stream.on('open', onOpen);
   stream.on('error', onError);
@@ -90,7 +66,7 @@ const server = http.createServer((req, res) => {
     sendErrorResponse(res, 403);
   }
 
-  const type = MIME[path.extname(file).slice(1)] || MIME.txt;
+  const type = CONSTANTS.MIME[path.extname(file).slice(1)] || CONSTANTS.MIME.txt;
 
   const rawStream = fs.createReadStream(file);
   handleStream(rawStream, () => {
