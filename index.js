@@ -27,7 +27,6 @@ const IMAGE_TYPES = [
 ];
 
 const ERROR_RESPONSES = {
-  400: 'Bad request',
   403: 'Forbidden',
   404: 'Not found',
   500: 'Internal server error',
@@ -104,7 +103,7 @@ const server = http.createServer((req, res) => {
     const { valid, resizedNameWithExt, rawName, ext, width, height } = getResizeParams(reqPath);
 
     if (!valid) {
-      return sendErrorResponse(res, 400);
+      return sendErrorResponse(res, 404);
     }
 
     const rawFilePath = `static/raw/${rawName}${ext}`
