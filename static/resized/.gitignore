@@ -1,0 +1,5 @@
+# for checking in the resized directory but not the resized images within
+
+*
+*/
+!.gitignore
