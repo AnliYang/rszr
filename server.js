@@ -38,6 +38,7 @@ const getResizeParams = (reqPath) => {
       height: Number(height)
     };
   } catch(err) {
+    console.error(err);
     return invalid;
   }
 };
@@ -54,17 +55,18 @@ const handleStream = (stream, onOpen, onError) => {
 };
 
 const server = http.createServer((req, res) => {
+  console.log(`request received: ${req.method} to ${req.url}`)
   const reqPath = req.url.toString().split('?')[0];
 
   if (req.method !== 'GET') {
-    sendErrorResponse(res, 501)
+    return sendErrorResponse(res, 501)
   }
 
   const file = path.join(dir, reqPath);
 
   // ?Confused about what case this covers. If we're formulating the file with path.join and putting dir first, wouldn't the index always be 0?
   if (file.indexOf(dir + path.sep) !== 0) {
-    sendErrorResponse(res, 403);
+    return sendErrorResponse(res, 403);
   }
 
   const type = CONSTANTS.MIME[path.extname(file).slice(1)] || CONSTANTS.MIME.txt;
@@ -99,7 +101,7 @@ const server = http.createServer((req, res) => {
           res.setHeader('Content-Type', type);
           resizedStream.pipe(res);
         }, () => {
-          sendErrorResponse(res, 500);
+          return sendErrorResponse(res, 500);
         });
       });
   });
